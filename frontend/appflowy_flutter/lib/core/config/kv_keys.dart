@@ -125,4 +125,11 @@ class KVKeys {
   /// The value is a boolean string
   static const String hasClickedUpgradeToProButton =
       'hasClickedUpgradeToProButton';
+
+  static const String kAppUiStyle = 'kAppUiStyle';
+  static const String kYonoteApiKey = 'kYonoteApiKey';
+  static const String kYonoteBaseUrl = 'kYonoteBaseUrl';
+  static const String kYonoteLastSyncTime = 'kYonoteLastSyncTime';
+  static const String kYonoteAutoSync = 'kYonoteAutoSync';
+  static const String kYonoteAutoSyncInterval = 'kYonoteAutoSyncInterval';
 }

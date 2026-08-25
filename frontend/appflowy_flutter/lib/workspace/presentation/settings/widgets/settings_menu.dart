@@ -109,6 +109,16 @@ class SettingsMenu extends StatelessWidget {
               ),
               changeSelectedPage: changeSelectedPage,
             ),
+            SettingsMenuElement(
+              page: SettingsPage.yonote,
+              selectedPage: currentPage,
+              label: 'Yonote Sync',
+              icon: const Icon(
+                Icons.sync,
+                size: 18,
+              ),
+              changeSelectedPage: changeSelectedPage,
+            ),
             if (userProfile.workspaceType == WorkspaceTypePB.ServerW &&
                 currentUserRole != null &&
                 currentUserRole != AFRolePB.Guest)

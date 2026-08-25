@@ -47,12 +47,15 @@ class SidebarUpgradeApplicationButton extends StatelessWidget {
           blendMode: null,
         ),
         const HSpace(6),
-        FlowyText.medium(
-          LocaleKeys.autoUpdate_bannerUpdateTitle.tr(),
-          fontSize: 14,
-          figmaLineHeight: 18,
+        Expanded(
+          child: FlowyText.medium(
+            LocaleKeys.autoUpdate_bannerUpdateTitle.tr(),
+            fontSize: 14,
+            figmaLineHeight: 18,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
-        const Spacer(),
+        const HSpace(4),
         FlowyButton(
           useIntrinsicWidth: true,
           text: const FlowySvg(FlowySvgs.upgrade_close_s),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:appflowy/core/ui_style/app_ui_style.dart';
 import 'package:appflowy/generated/flowy_svgs.g.dart';
 import 'package:appflowy/generated/locale_keys.g.dart';
 import 'package:appflowy/plugins/document/presentation/editor_plugins/header/emoji_icon_widget.dart';
@@ -544,14 +545,31 @@ class _SingleInnerViewItemState extends State<SingleInnerViewItem> {
   }
 
   Widget _buildViewItem(bool onHover, [bool isSelected = false]) {
+    final uiStyle = AppUiStyleNotifier.instance.currentStyle;
+
     final name = FlowyText.regular(
       widget.view.nameOrDefault,
       overflow: TextOverflow.ellipsis,
       fontSize: 14.0,
       figmaLineHeight: 18.0,
+      color: uiStyle.itemTextColor(context, isSelected),
     );
-    final children = [
-      const HSpace(2),
+    final children = <Widget>[
+      if (uiStyle == AppUiStyle.windows11 && isSelected) ...[
+        Container(
+          width: 3,
+          height: 16,
+          margin: const EdgeInsets.only(right: 3),
+          decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? const Color(0xFF60CDFF)
+                : const Color(0xFF0067C0),
+            borderRadius: BorderRadius.circular(1.5),
+          ),
+        ),
+      ] else ...[
+        const HSpace(2),
+      ],
       // expand icon or placeholder
       widget.leftIconBuilder?.call(context, widget.view) ?? _buildLeftIcon(),
       const HSpace(2),
@@ -569,6 +587,20 @@ class _SingleInnerViewItemState extends State<SingleInnerViewItem> {
               )
             : name,
       ),
+      if (uiStyle == AppUiStyle.macos26 && widget.view.childViews.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.only(right: 6),
+          child: Text(
+            '${widget.view.childViews.length}',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: isSelected
+                  ? Colors.white.withValues(alpha: 0.8)
+                  : Colors.grey.withValues(alpha: 0.8),
+            ),
+          ),
+        ),
     ];
 
     // hover action
@@ -601,13 +633,20 @@ class _SingleInnerViewItemState extends State<SingleInnerViewItem> {
       }
     }
 
-    final child = GestureDetector(
+    Widget child = GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: _handleViewTap,
       onTertiaryTapDown: (_) =>
           widget.onTertiarySelected?.call(context, widget.view),
-      child: SizedBox(
+      child: Container(
         height: widget.height,
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+        decoration: isSelected
+            ? BoxDecoration(
+                color: uiStyle.itemSelectedBackground(context),
+                borderRadius: uiStyle.itemBorderRadius,
+              )
+            : null,
         child: Padding(
           padding: EdgeInsets.only(left: widget.level * widget.leftPadding),
           child: Listener(

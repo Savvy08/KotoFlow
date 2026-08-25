@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:appflowy/core/ui_style/app_ui_style.dart';
 import 'package:appflowy/features/workspace/logic/workspace_bloc.dart';
+import 'package:universal_platform/universal_platform.dart';
 import 'package:appflowy/generated/flowy_svgs.g.dart';
 import 'package:appflowy/generated/locale_keys.g.dart';
 import 'package:appflowy/mobile/presentation/search/view_ancestor_cache.dart';
@@ -330,19 +332,63 @@ class _SidebarState extends State<_Sidebar> {
   @override
   Widget build(BuildContext context) {
     const menuHorizontalInset = EdgeInsets.symmetric(horizontal: 8);
-    return MouseRegion(
-      onEnter: (_) => _isHovered.value = true,
-      onExit: (_) => _isHovered.value = false,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          border: Border(
-            right: BorderSide(color: Theme.of(context).dividerColor),
-          ),
-        ),
-        child: Column(
+    return ListenableBuilder(
+      listenable: AppUiStyleNotifier.instance,
+      builder: (context, _) {
+        final uiStyle = AppUiStyleNotifier.instance.currentStyle;
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final bgColor = uiStyle.sidebarBackground(context);
+
+        final isMacIsland = uiStyle == AppUiStyle.macos26;
+        final isWinIsland = uiStyle == AppUiStyle.windows11;
+
+        final outerMargin = isMacIsland
+            ? const EdgeInsets.only(left: 6, top: 6, bottom: 6, right: 4)
+            : EdgeInsets.zero;
+
+        final borderRadius = isMacIsland
+            ? BorderRadius.circular(16.0)
+            : BorderRadius.zero;
+
+        final border = isMacIsland
+            ? Border.all(
+                color: isDark
+                    ? const Color(0xFF2E2E35)
+                    : const Color(0xFFD4D4D8),
+                width: 1.0,
+              )
+            : (isWinIsland
+                ? Border(
+                    right: BorderSide(
+                      color: isDark
+                          ? const Color(0xFF2D2D30)
+                          : const Color(0xFFE5E5E5),
+                      width: 1.0,
+                    ),
+                  )
+                : Border(
+                    right: BorderSide(color: Theme.of(context).dividerColor),
+                  ));
+
+        final boxShadow = isMacIsland
+            ? [
+                BoxShadow(
+                  color: isDark
+                      ? Colors.black.withValues(alpha: 0.35)
+                      : Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 12,
+                  offset: const Offset(0, 3),
+                )
+              ]
+            : null;
+
+        Widget content = Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // If macOS 26 style on mac, top traffic light space
+            if (isMacIsland && UniversalPlatform.isMacOS)
+              const SizedBox(height: 14),
+
             // top menu
             Padding(
               padding: menuHorizontalInset,
@@ -416,8 +462,30 @@ class _SidebarState extends State<_Sidebar> {
             ),
             const VSpace(14),
           ],
-        ),
-      ),
+        );
+
+        if (borderRadius != BorderRadius.zero) {
+          content = ClipRRect(
+            borderRadius: borderRadius,
+            child: content,
+          );
+        }
+
+        return MouseRegion(
+          onEnter: (_) => _isHovered.value = true,
+          onExit: (_) => _isHovered.value = false,
+          child: Container(
+            margin: outerMargin,
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: borderRadius,
+              border: border,
+              boxShadow: boxShadow,
+            ),
+            child: content,
+          ),
+        );
+      },
     );
   }
 
@@ -493,39 +561,7 @@ class _SidebarState extends State<_Sidebar> {
   }
 
   Widget _buildUpgradeApplicationButton(EdgeInsets menuHorizontalInset) {
-    return ValueListenableBuilder(
-      valueListenable: _muteUpdateButton,
-      builder: (_, mute, child) {
-        if (mute) {
-          return const SizedBox.shrink();
-        }
-
-        return ValueListenableBuilder(
-          valueListenable: ApplicationInfo.latestVersionNotifier,
-          builder: (_, latestVersion, child) {
-            if (!ApplicationInfo.isUpdateAvailable) {
-              return const SizedBox.shrink();
-            }
-
-            return Padding(
-              padding: menuHorizontalInset +
-                  const EdgeInsets.only(
-                    left: 4.0,
-                    right: 4.0,
-                  ),
-              child: SidebarUpgradeApplicationButton(
-                onUpdateButtonTap: () {
-                  versionChecker.checkForUpdate();
-                },
-                onCloseButtonTap: () {
-                  _muteUpdateButton.value = true;
-                },
-              ),
-            );
-          },
-        );
-      },
-    );
+    return const SizedBox.shrink();
   }
 
   void _onScrollChanged() {

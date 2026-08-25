@@ -18,6 +18,7 @@ import 'package:appflowy/workspace/presentation/home/menu/sidebar/space/shared_w
 import 'package:appflowy/workspace/presentation/home/menu/sidebar/workspace/_sidebar_workspace_icon.dart';
 import 'package:appflowy/workspace/presentation/home/toast.dart';
 import 'package:appflowy/workspace/presentation/settings/shared/af_dropdown_menu_entry.dart';
+import 'package:appflowy/workspace/presentation/settings/shared/app_ui_style_selector.dart';
 import 'package:appflowy/workspace/presentation/settings/shared/document_color_setting_button.dart';
 import 'package:appflowy/workspace/presentation/settings/shared/setting_action.dart';
 import 'package:appflowy/workspace/presentation/settings/shared/setting_list_tile.dart';
@@ -117,6 +118,12 @@ class SettingsWorkspaceView extends StatelessWidget {
               SettingsCategory(
                 title: LocaleKeys.settings_workspacePage_appearance_title.tr(),
                 children: const [AppearanceSelector()],
+              ),
+              const VSpace(16),
+              const SettingsCategory(
+                title: 'Стиль и макет интерфейса (Layout Shell)',
+                description: 'Выбор дизайна интерфейса (Классический KotoFlow / Нативный macOS 26 / Windows 11 Fluent)',
+                children: [AppUiStyleSelector()],
               ),
               const VSpace(16),
               // const SettingsCategorySpacer(),

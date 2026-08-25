@@ -1,157 +1,89 @@
-<h1 align="center" style="border-bottom: none">
-    <b>
-        <a href="https://www.appflowy.com">AppFlowy</a><br>
-    </b>
-    ⭐️  The Open Source Alternative To Notion  ⭐️ <br>
-</h1>
+# KotoFlow форк AppFlowy <img src="https://github.com/user-attachments/assets/988bcda4-1dab-444f-b4ff-581732846910" width="32" height="32" style="vertical-align: text-bottom;" />
 
-<p align="center">
-AppFlowy is the AI workspace where you achieve more without losing control of your data
-</p>
 
-<p align="center">
-<a href="https://discord.gg/9Q2xaN37tV"><img src="https://img.shields.io/badge/AppFlowy.IO-discord-orange"></a>
-<a href="https://github.com/AppFlowy-IO/appflowy"><img src="https://img.shields.io/github/stars/AppFlowy-IO/appflowy.svg?style=flat&logo=github&colorB=deeppink&label=stars"></a>
-<a href="https://github.com/AppFlowy-IO/appflowy"><img src="https://img.shields.io/github/forks/AppFlowy-IO/appflowy.svg"></a>
-<a href="https://opensource.org/licenses/AGPL-3.0"><img src="https://img.shields.io/badge/license-AGPL-purple.svg" alt="License: AGPL"></a>
+KotoFlow - это автономное рабочее пространство и персональная база знаний с локальным хранением данных, глубокой двусторонней синхронизацией с сервисом Yonote.
 
-</p>
+Проект создан c целью изменить интерфейс приложения и добавить возможность подключать сторонние сервисы по API
 
-<p align="center">
-    <a href="https://www.appflowy.com"><b>Website</b></a> •
-    <a href="https://forum.appflowy.io/"><b>Forum</b></a> •
-    <a href="https://discord.gg/9Q2xaN37tV"><b>Discord</b></a> •
-    <a href="https://www.reddit.com/r/AppFlowy"><b>Reddit</b></a> •
-    <a href="https://twitter.com/appflowy"><b>Twitter</b></a>
-</p>
+---
 
-<p align="center"><img src="https://appflowy.com/_next/static/media/tasks.796c753e.png" alt="AppFlowy Kanban Board for To-dos"  /></p>
-<p align="center"><img src="https://appflowy.com/_next/static/media/Grid.9e30484b.png" alt="AppFlowy Databases for Tasks and Projects"  /></p>
-<p align="center"><img src="https://appflowy.com/_next/static/media/sites.a8d5b2b9.png" alt="AppFlowy Sites for Beautiful documentation"  /></p>
-<p align="center"><img src="https://appflowy.com/_next/static/media/ai.e1460982.png" alt="AppFlowy AI" /></p>
-<p align="center"><img src="https://appflowy.com/_next/static/media/template.9ea13c3b.png" alt="AppFlowy Templates"  /></p>
+<img width="1180" height="687" alt="изображение" src="https://github.com/user-attachments/assets/f1f9500c-650a-4d2d-9df1-e61a811c99cf" />
 
-<br></br>
-<p align="center" >
-    <img src="https://github.com/user-attachments/assets/5841c491-b564-4a26-b9b6-191def430911" alt="Work across devices" width="1040px" /></p>
-<p align="center" >
-    <img src="https://github.com/user-attachments/assets/c2ba6bb8-746c-4743-9393-d008a669be95" alt="Work across devices" width="1040px" /></p>
-<p align="center" >
-    <img src="https://github.com/user-attachments/assets/e83dd1a3-4975-4d0e-91a1-9eb6e0d248cd" alt="Work across devices" width="1040px" /></p>
 
-## User Installation
+---
 
-- [Download AppFlowy Desktop (macOS, Windows, and Linux)](https://github.com/AppFlowy-IO/AppFlowy/releases)
-- Other
-  channels: [FlatHub](https://flathub.org/apps/io.appflowy.AppFlowy), [Snapcraft](https://snapcraft.io/appflowy), [Sourceforge](https://sourceforge.net/projects/appflowy/)
-- Available on
-    - [App Store](https://apps.apple.com/app/appflowy/id6457261352): iPhone
-    - [Play Store](https://play.google.com/store/apps/details?id=io.appflowy.appflowy): Android 10 or above; ARMv7 is
-      not supported
-- [Self-hosting AppFlowy](https://appflowy.com/docs/Step-by-step-Self-Hosting-Guide---From-Zero-to-Production)
-- [Source](https://docs.appflowy.io/docs/documentation/appflowy/from-source)
+## Назначение проекта
 
-## Built With
+KotoFlow решает задачу безопасного хранения информации и удобной работы с базой знаний:
 
-- [Flutter](https://flutter.dev/)
+1. **Полная независимость и конфиденциальность:** все заметки, базы данных и вложения хранятся локально на вашем устройстве в зашифрованном виде.
+2. **Бесшовная работа с Yonote:** автоматический импорт и экспорт документов, поддержка коллекций и вложенных структур папок через официальный API.
+3. **Адаптивный дизайн:** возможность переключения интерфейса под эстетику используемой операционной системы без компромиссов в производительности.
 
-- [Rust](https://www.rust-lang.org/)
+---
 
-## Stay Up-to-Date
+## Ключевые возможности
 
-<p align="center"><img src="https://github.com/AppFlowy-IO/appflowy/blob/main/doc/imgs/howtostar.gif" alt="AppFlowy Github - how to star the repo" width="100%" /></p>
+### 1. Синхронизация с Yonote API
+- Двусторонний обмен документами между локальным хранилищем и Yonote.
+- Сохранение иерархии коллекций и структуры вложенных папок.
+- Преобразование форматирования Markdown: корректная обработка заголовков, списков задач, цитат, коллаутов, таблиц и блоков программного кода.
+- Автоматическое разрешение абсолютных адресов для медиафайлов и изображений.
+- Настраиваемый фоновый автосинк с интервалами обновления.
 
-## Getting Started with development
+### 2. Стили интерфейса (Layout Shell)
+- **MacOS26:** оформление в стиле Apple Notes с монолитным сайдбаром, скруглениями 16px, системным шрифтом SF Pro и янтарным акцентным выделением.
+- **Windows 11:** интерфейс в стиле Fluent UI с вертикальным индикатором активного элемента, геометрией WinUI 3 и шрифтом Segoe UI.
+- **Классический KotoFlow:** проверенная временем блочная компоновка рабочего пространства.
 
-Please view the [documentation](https://docs.appflowy.io/docs/documentation/appflowy/from-source) for OS specific
-development instructions
+### 3. Редактор документов и структурирование данных
+- Блочный редактор с поддержкой заголовков, списков, кода, формул LaTeX, чекбоксов и таблиц.
+- Встроенные базы данных: табличный вид, сетка и канбан-доски.
+- Полнотекстовый локальный поиск по содержимому и названиям.
+- Поддержка тегов, избранного и корзины.
 
-## Roadmap
+---
 
-- [AppFlowy Roadmap ReadMe](https://docs.appflowy.io/docs/appflowy/roadmap)
-- [AppFlowy Public Roadmap](https://github.com/orgs/AppFlowy-IO/projects/5/views/12)
+## Технологический стек
 
-If you'd like to propose a feature, submit a feature
-request [here](https://github.com/AppFlowy-IO/AppFlowy/issues/new?assignees=&labels=&template=feature_request.yaml&title=%5BFR%5D+) <br/>
-If you'd like to report a bug, submit a bug
-report [here](https://github.com/AppFlowy-IO/AppFlowy/issues/new?assignees=&labels=&template=bug_report.yaml&title=%5BBug%5D+)
+- **Пользовательский интерфейс:** Flutter, Dart
+- **Высокопроизводительное ядро:** Rust (dart-ffi, tokio, sled/sqlite)
+- **Сетевой уровень:** HTTP Client, OpenAPI интеграция
+- **Сборка и CI/CD:** Cargo Make, GitHub Actions
 
-## **Releases**
+---
 
-Please see the [changelog](https://appflowy.com/what-is-new) for more details about a given release.
+## Быстрый старт
 
-## Contributing
+### Настройка синхронизации с Yonote
+1. Откройте приложение KotoFlow.
+2. Перейдите в раздел: **Настройки -> Yonote Sync**.
+3. Введите ваш API-токен Yonote и нажмите кнопку **Проверить подключение**.
+4. Нажмите **Синхронизировать сейчас** для загрузки структуры коллекций и заметок.
 
-Contributions make the open-source community a fantastic place to learn, inspire, and create. Any contributions you make
-are **greatly appreciated**. Please look
-at [Contributing to AppFlowy](https://docs.appflowy.io/docs/documentation/software-contributions/contributing-to-appflowy)
-for details.
+### Переключение темы оформления
+1. Откройте **Настройки -> Рабочее пространство**.
+2. В блоке **Стиль и макет интерфейса** выберите желаемый режим: `MacOS26`, `Windows 11` или `Классический KotoFlow`.
+3. Изменения применяются мгновенно без перезапуска приложения.
 
-If your Pull Request is accepted as it fixes a bug, adds functionality, or makes AppFlowy's codebase significantly
-easier to use or understand, **Congratulations!** If your administrative and managerial work behind the scenes sustains
-the community, **Congratulations!** You are now an official contributor to AppFlowy.
+---
 
-## Translations 🌎🗺
+## Сборка из исходного кода
 
-[![translation badge](https://inlang.com/badge?url=github.com/AppFlowy-IO/AppFlowy)](https://inlang.com/editor/github.com/AppFlowy-IO/AppFlowy?ref=badge)
+### macOS
+```bash
+cd frontend/appflowy_flutter
+flutter build macos --debug
+```
 
-To add translations, you can manually edit the JSON translation files in `/frontend/resources/translations`, use
-the [inlang online editor](https://inlang.com/editor/github.com/AppFlowy-IO/AppFlowy), or
-run `npx inlang machine translate` to add missing translations.
+### Windows
+```bash
+cd frontend/appflowy_flutter
+flutter build windows --release
+```
 
-## Join the community to build AppFlowy together
+---
 
-<a href="https://github.com/AppFlowy-IO/AppFlowy/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=AppFlowy-IO/AppFlowy" />
-</a>
+## Лицензия
 
-## Why Are We Building This?
-
-Notion has been our favourite project and knowledge management tool in recent years because of its aesthetic appeal and
-functionality. Our team uses it daily, and we are on its paid plan. However, as we all know, Notion has its limitations.
-These include weak data security and poor compatibility with mobile devices. Likewise, alternative collaborative
-workplace management tools also have their constraints.
-
-The limitations we encountered using these tools and our past work experience with collaborative productivity tools have
-led to our firm belief that there is a glass ceiling on what's possible for these tools in the future. This emanates
-from the fact that these tools will probably struggle to scale horizontally at some point and be forced to prioritize a
-proportion of customers whose needs differ from the rest. While decision-makers want a workplace OS, it is impossible to
-come up with a one-size fits all solution in such a fragmented market.
-
-When a customer's evolving core needs are not satisfied, they either switch to another or build one from the ground up,
-in-house. Consequently, they either go under another ceiling or buy an expensive ticket to learn a hard lesson. This is
-a requirement for many resources and expertise, building a reliable and easy-to-use collaborative tool, not to mention
-the speed and native experience. The same may apply to individual users as well.
-
-All these restrictions necessitate our mission - to make it possible for anyone to create apps that suit their needs
-well.
-
-- To individuals, we would like to offer Notion's functionality, data security, and cross-platform native experience.
-- To enterprises and hackers, AppFlowy is dedicated to offering building blocks and collaboration infra services to
-  enable you to make apps on your own. Moreover, you have 100% control of your data. You can design and modify AppFlowy
-  your way, with a single codebase written in Flutter and Rust supporting multiple platforms armed with long-term
-  maintainability.
-
-We decided to achieve this mission by upholding the three most fundamental values:
-
-- Data privacy first
-- Reliable native experience
-- Community-driven extensibility
-
-We do not claim to outperform Notion in terms of functionality and design, at least for now. Besides, our priority
-doesn't lie in more functionality at the moment. Instead, we would like to cultivate a community to democratize the
-knowledge and wheels of making complex workplace management tools while enabling people and businesses to create
-beautiful things on their own by equipping them with a versatile toolbox of building blocks.
-
-## License
-
-Distributed under the AGPLv3 License. See [`LICENSE.md`](https://github.com/AppFlowy-IO/AppFlowy/blob/main/LICENSE) for
-more information.
-
-## Acknowledgments
-
-Special thanks to these amazing projects which help power AppFlowy:
-
-- [cargo-make](https://github.com/sagiegurari/cargo-make)
-- [contrib.rocks](https://contrib.rocks)
-- [flutter_chat_ui](https://pub.dev/packages/flutter_chat_ui)
+Проект распространяется на условиях лицензии AGPLv3.

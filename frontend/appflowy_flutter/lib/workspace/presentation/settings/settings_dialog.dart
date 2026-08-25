@@ -15,6 +15,7 @@ import 'package:appflowy/workspace/presentation/settings/pages/settings_manage_d
 import 'package:appflowy/workspace/presentation/settings/pages/settings_plan_view.dart';
 import 'package:appflowy/workspace/presentation/settings/pages/settings_shortcuts_view.dart';
 import 'package:appflowy/workspace/presentation/settings/pages/settings_workspace_view.dart';
+import 'package:appflowy/workspace/presentation/settings/pages/settings_yonote_view.dart';
 import 'package:appflowy/workspace/presentation/settings/pages/sites/settings_sites_view.dart';
 import 'package:appflowy/workspace/presentation/settings/shared/af_dropdown_menu_entry.dart';
 import 'package:appflowy/workspace/presentation/settings/shared/settings_category.dart';
@@ -81,7 +82,7 @@ class SettingsDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    width: 204,
+                    width: 228,
                     child: SettingsMenu(
                       userProfile: user,
                       changeSelectedPage: (index) => context
@@ -182,6 +183,8 @@ class SettingsDialog extends StatelessWidget {
           workspaceId: workspace.workspaceId,
           user: user,
         );
+      case SettingsPage.yonote:
+        return const SettingsYonoteView();
       case SettingsPage.featureFlags:
         return const FeatureFlagsPage();
     }

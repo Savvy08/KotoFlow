@@ -40,10 +40,14 @@ class SettingsMenuElement extends StatelessWidget {
           children: [
             icon,
             HSpace(theme.spacing.m),
-            Text(
-              label,
-              style: theme.textStyle.body.standard(
-                color: theme.textColorScheme.primary,
+            Expanded(
+              child: Text(
+                label,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: theme.textStyle.body.standard(
+                  color: theme.textColorScheme.primary,
+                ),
               ),
             ),
           ],
