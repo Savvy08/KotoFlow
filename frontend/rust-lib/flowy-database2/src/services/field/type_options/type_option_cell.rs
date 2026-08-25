@@ -409,26 +409,32 @@ impl<'a> TypeOptionCellExt<'a> {
             self.cell_data_cache.clone(),
           )
         }),
-      FieldType::SingleSelect => self
-        .field
-        .get_type_option::<SingleSelectTypeOption>(field_type)
-        .map(|type_option| {
-          TypeOptionCellDataHandlerImpl::new_with_boxed(
-            type_option,
-            field_type,
-            self.cell_data_cache.clone(),
-          )
-        }),
-      FieldType::MultiSelect => self
-        .field
-        .get_type_option::<MultiSelectTypeOption>(field_type)
-        .map(|type_option| {
-          TypeOptionCellDataHandlerImpl::new_with_boxed(
-            type_option,
-            field_type,
-            self.cell_data_cache.clone(),
-          )
-        }),
+      FieldType::SingleSelect => {
+        let type_option = self
+          .field
+          .get_type_option::<SingleSelectTypeOption>(field_type)
+          .or_else(|| self.field.get_type_option::<SingleSelectTypeOption>(self.field.field_type))
+          .or_else(|| self.field.type_options.values().next().cloned().map(SingleSelectTypeOption::from))
+          .unwrap_or_default();
+        Some(TypeOptionCellDataHandlerImpl::new_with_boxed(
+          type_option,
+          field_type,
+          self.cell_data_cache.clone(),
+        ))
+      },
+      FieldType::MultiSelect => {
+        let type_option = self
+          .field
+          .get_type_option::<MultiSelectTypeOption>(field_type)
+          .or_else(|| self.field.get_type_option::<MultiSelectTypeOption>(self.field.field_type))
+          .or_else(|| self.field.type_options.values().next().cloned().map(MultiSelectTypeOption::from))
+          .unwrap_or_default();
+        Some(TypeOptionCellDataHandlerImpl::new_with_boxed(
+          type_option,
+          field_type,
+          self.cell_data_cache.clone(),
+        ))
+      },
       FieldType::Checkbox => self
         .field
         .get_type_option::<CheckboxTypeOption>(field_type)

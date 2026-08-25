@@ -23,9 +23,7 @@ class AppUiStyleSelector extends StatelessWidget {
               expandWidth: false,
               selectedOption: current,
               onChanged: (style) {
-                if (style != null) {
-                  AppUiStyleNotifier.instance.setStyle(style);
-                }
+                AppUiStyleNotifier.instance.setStyle(style);
               },
               options: AppUiStyle.values
                   .map(

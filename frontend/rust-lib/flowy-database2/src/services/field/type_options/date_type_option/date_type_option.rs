@@ -135,7 +135,10 @@ impl CellDataDecoder for DateTypeOption {
     _from_field_type: FieldType,
     _field: &Field,
   ) -> Option<<Self as TypeOption>::CellData> {
-    let s = cell.get_as::<String>(CELL_DATA)?;
+    let s = cell
+      .get_as::<String>(CELL_DATA)
+      .or_else(|| cell.get_as::<String>("text"))
+      .or_else(|| cell.get_as::<String>("value"))?;
     let timestamp = cast_string_to_timestamp(&s)?;
     Some(DateCellData::from_timestamp(timestamp))
   }

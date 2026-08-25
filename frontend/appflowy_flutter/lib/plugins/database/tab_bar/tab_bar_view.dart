@@ -172,8 +172,10 @@ class _DatabaseTabBarViewState extends State<DatabaseTabBarView> {
                 children: [
                   if (UniversalPlatform.isMobile) const VSpace(12),
                   ValueListenableBuilder<bool>(
-                    valueListenable: state
-                        .tabBarControllerByViewId[state.parentView.id]!
+                    valueListenable: (state.tabBarControllerByViewId[
+                                state.tabBars[state.selectedIndex].viewId] ??
+                            state.tabBarControllerByViewId[
+                                state.parentView.id]!)
                         .controller
                         .isLoading,
                     builder: (_, value, ___) {

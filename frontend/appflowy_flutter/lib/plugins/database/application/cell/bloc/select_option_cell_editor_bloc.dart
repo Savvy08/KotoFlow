@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
+import 'package:appflowy/plugins/database/application/cell/cell_controller.dart';
 import 'package:appflowy/plugins/database/application/cell/cell_controller_builder.dart';
 import 'package:appflowy/plugins/database/application/field/field_info.dart';
 import 'package:appflowy/plugins/database/application/field/type_option/select_type_option_actions.dart';
@@ -442,17 +443,38 @@ class CreateSelectOptionSuggestion {
 List<SelectOptionPB> _loadAllOptions(
   SelectOptionCellController cellController,
 ) {
+  List<SelectOptionPB> options = [];
   if (cellController.fieldType == FieldType.SingleSelect) {
-    return cellController
+    options = cellController
         .getTypeOption<SingleSelectTypeOptionPB>(
           SingleSelectTypeOptionDataParser(),
         )
         .options;
   } else {
-    return cellController
+    options = cellController
         .getTypeOption<MultiSelectTypeOptionPB>(
           MultiSelectTypeOptionDataParser(),
         )
         .options;
   }
+
+  if (options.isEmpty) {
+    final collected = <String, SelectOptionPB>{};
+    for (final row in cellController.rowCache.rowInfos) {
+      final cellData =
+          cellController.rowCache.cellCache.get<SelectOptionCellDataPB>(
+        CellContext(fieldId: cellController.fieldId, rowId: row.rowId),
+      );
+      if (cellData != null) {
+        for (final opt in cellData.selectOptions) {
+          if (opt.name.isNotEmpty && !collected.containsKey(opt.name)) {
+            collected[opt.name] = opt;
+          }
+        }
+      }
+    }
+    options = collected.values.toList();
+  }
+
+  return options;
 }

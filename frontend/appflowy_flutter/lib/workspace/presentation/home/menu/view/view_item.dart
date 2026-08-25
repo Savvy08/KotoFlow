@@ -633,7 +633,7 @@ class _SingleInnerViewItemState extends State<SingleInnerViewItem> {
       }
     }
 
-    Widget child = GestureDetector(
+    final Widget child = GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: _handleViewTap,
       onTertiaryTapDown: (_) =>

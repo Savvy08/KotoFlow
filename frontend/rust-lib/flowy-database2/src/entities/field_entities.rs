@@ -45,6 +45,8 @@ impl FieldPB {
     let field_type = field.field_type.into();
     let type_option = field
       .get_any_type_option(field_type)
+      .or_else(|| field.get_any_type_option(field.field_type))
+      .or_else(|| field.type_options.values().next().cloned())
       .unwrap_or_else(|| default_type_option_data_from_type(field_type));
     Self {
       id: field.id,

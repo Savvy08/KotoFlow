@@ -11,9 +11,7 @@ import 'package:appflowy/plugins/blank/blank.dart';
 import 'package:appflowy/plugins/document/presentation/editor_notification.dart';
 import 'package:appflowy/shared/feature_flags.dart';
 import 'package:appflowy/shared/loading.dart';
-import 'package:appflowy/shared/version_checker/version_checker.dart';
 import 'package:appflowy/startup/startup.dart';
-import 'package:appflowy/startup/tasks/device_info_task.dart';
 import 'package:appflowy/workspace/application/action_navigation/action_navigation_bloc.dart';
 import 'package:appflowy/workspace/application/action_navigation/navigation_action.dart';
 import 'package:appflowy/workspace/application/command_palette/command_palette_bloc.dart';
@@ -29,7 +27,6 @@ import 'package:appflowy/workspace/application/view/view_service.dart';
 import 'package:appflowy/workspace/presentation/command_palette/command_palette.dart';
 import 'package:appflowy/workspace/presentation/home/home_sizes.dart';
 import 'package:appflowy/workspace/presentation/home/menu/sidebar/footer/sidebar_footer.dart';
-import 'package:appflowy/workspace/presentation/home/menu/sidebar/footer/sidebar_upgrade_application_button.dart';
 import 'package:appflowy/workspace/presentation/home/menu/sidebar/header/sidebar_top_menu.dart';
 import 'package:appflowy/workspace/presentation/home/menu/sidebar/header/sidebar_user.dart';
 import 'package:appflowy/workspace/presentation/home/menu/sidebar/shared/sidebar_folder.dart';
@@ -310,9 +307,6 @@ class _SidebarState extends State<_Sidebar> {
   final _isHovered = ValueNotifier(false);
   final _scrollOffset = ValueNotifier<double>(0);
 
-  // mute the update button during the current application lifecycle.
-  final _muteUpdateButton = ValueNotifier(false);
-
   @override
   void initState() {
     super.initState();
@@ -355,7 +349,6 @@ class _SidebarState extends State<_Sidebar> {
                 color: isDark
                     ? const Color(0xFF2E2E35)
                     : const Color(0xFFD4D4D8),
-                width: 1.0,
               )
             : (isWinIsland
                 ? Border(
@@ -363,7 +356,6 @@ class _SidebarState extends State<_Sidebar> {
                       color: isDark
                           ? const Color(0xFF2D2D30)
                           : const Color(0xFFE5E5E5),
-                      width: 1.0,
                     ),
                   )
                 : Border(
@@ -378,7 +370,7 @@ class _SidebarState extends State<_Sidebar> {
                       : Colors.black.withValues(alpha: 0.08),
                   blurRadius: 12,
                   offset: const Offset(0, 3),
-                )
+                ),
               ]
             : null;
 

@@ -49,11 +49,30 @@ jobs:
         run: |
           cargo make --profile production-windows-x86 appflowy-windows
 
+      - name: Archive Windows Release
+        shell: bash
+        run: |
+          mkdir -p dist
+          if [ -d "frontend/appflowy_flutter/build/windows/x64/runner/Release" ]; then
+            echo "Archiving from build/windows/x64/runner/Release..."
+            cd frontend/appflowy_flutter/build/windows/x64/runner/Release
+            7z a -tzip -mx=9 "$GITHUB_WORKSPACE/dist/KotoFlow-Windows-x64.zip" *
+          elif [ -d "frontend/appflowy_flutter/product" ]; then
+            echo "Archiving from product directory..."
+            cd frontend/appflowy_flutter/product
+            7z a -tzip -mx=9 "$GITHUB_WORKSPACE/dist/KotoFlow-Windows-x64.zip" *
+          else
+            echo "Locating built executable directory..."
+            EXE_DIR=$(find frontend/appflowy_flutter/build -name "AppFlowy.exe" -exec dirname {} \; | head -n 1)
+            if [ -n "$EXE_DIR" ] && [ -d "$EXE_DIR" ]; then
+              cd "$EXE_DIR"
+              7z a -tzip -mx=9 "$GITHUB_WORKSPACE/dist/KotoFlow-Windows-x64.zip" *
+            fi
+          fi
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: KotoFlow-Windows-x64
-          path: |
-            **/Release/**
-            **/product/**
+          path: dist/KotoFlow-Windows-x64.zip
           retention-days: 14

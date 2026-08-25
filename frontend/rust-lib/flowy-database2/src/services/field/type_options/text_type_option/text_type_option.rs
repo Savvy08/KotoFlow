@@ -135,6 +135,26 @@ impl TypeOptionCellData for StringCellData {
 
 impl From<&Cell> for StringCellData {
   fn from(cell: &Cell) -> Self {
+    if let Some(data) = cell.get_as::<String>(CELL_DATA) {
+      if !data.is_empty() {
+        return Self(data);
+      }
+    }
+    if let Some(text) = cell.get_as::<String>("text") {
+      if !text.is_empty() {
+        return Self(text);
+      }
+    }
+    if let Some(content) = cell.get_as::<String>("content") {
+      if !content.is_empty() {
+        return Self(content);
+      }
+    }
+    if let Some(val) = cell.get_as::<String>("value") {
+      if !val.is_empty() {
+        return Self(val);
+      }
+    }
     Self(cell.get_as(CELL_DATA).unwrap_or_default())
   }
 }

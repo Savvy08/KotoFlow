@@ -76,6 +76,7 @@ class CellController<T, D> {
   ValueNotifier<bool>? get hasDocument =>
       _rowCache.getRow(rowId)?.rowDocumentNotifier;
   CellMemCache get _cellCache => _rowCache.cellCache;
+  RowCache get rowCache => _rowCache;
 
   /// casting method for painless type coersion
   CellController<A, B> as<A, B>() => this as CellController<A, B>;

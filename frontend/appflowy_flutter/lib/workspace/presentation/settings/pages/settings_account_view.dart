@@ -113,7 +113,7 @@ class _SettingsAccountViewState extends State<SettingsAccountView> {
 
               // App version
               SettingsCategory(
-                title: LocaleKeys.newSettings_myAccount_aboutAppFlowy.tr(),
+                title: 'О KotoFlow',
                 children: const [
                   SettingsAppVersion(),
                 ],

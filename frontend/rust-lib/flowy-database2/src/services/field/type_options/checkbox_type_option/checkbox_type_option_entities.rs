@@ -21,7 +21,11 @@ impl TypeOptionCellData for CheckboxCellDataPB {
 
 impl From<&Cell> for CheckboxCellDataPB {
   fn from(cell: &Cell) -> Self {
-    let value: String = cell.get_as(CELL_DATA).unwrap_or_default();
+    let value: String = cell
+      .get_as::<String>(CELL_DATA)
+      .or_else(|| cell.get_as::<String>("text"))
+      .or_else(|| cell.get_as::<String>("value"))
+      .unwrap_or_default();
     CheckboxCellDataPB::from_str(&value).unwrap_or_default()
   }
 }

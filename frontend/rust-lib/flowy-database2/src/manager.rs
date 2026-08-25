@@ -212,6 +212,17 @@ impl DatabaseManager {
   pub async fn get_database_id_with_view_id(&self, view_id: &str) -> FlowyResult<String> {
     let lock = self.workspace_database()?;
     let wdb = lock.read().await;
+    if let Some(database_id) = wdb.get_database_id_with_view_id(view_id) {
+      return Ok(database_id);
+    }
+    drop(wdb);
+
+    if let Ok(_) = self.open_database(view_id).await {
+      return Ok(view_id.to_string());
+    }
+
+    let lock = self.workspace_database()?;
+    let wdb = lock.read().await;
     let database_id = wdb.get_database_id_with_view_id(view_id);
     database_id.ok_or_else(|| {
       FlowyError::record_not_found()

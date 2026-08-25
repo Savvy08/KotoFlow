@@ -37,17 +37,18 @@ class DatabaseTabBarBloc
             _loadChildView();
           },
           didLoadChildViews: (List<ViewPB> childViews) {
-            emit(
-              state.copyWith(
-                tabBars: [
-                  ...state.tabBars,
-                  ...childViews.map(
-                    (newChildView) => DatabaseTabBar(view: newChildView),
-                  ),
-                ],
-                tabBarControllerByViewId: _extendsTabBarController(childViews),
-              ),
-            );
+            if (childViews.isNotEmpty) {
+              final newControllers = _extendsTabBarController(childViews);
+              emit(
+                state.copyWith(
+                  tabBars: childViews
+                      .map((newChildView) => DatabaseTabBar(view: newChildView))
+                      .toList(),
+                  tabBarControllerByViewId: newControllers,
+                  selectedIndex: 0,
+                ),
+              );
+            }
           },
           selectView: (String viewId) {
             final index =
@@ -178,14 +179,22 @@ class DatabaseTabBarBloc
   }
 
   Future<void> _createLinkedView(ViewLayoutPB layoutType, String name) async {
-    final viewId = state.parentView.id;
-    final databaseIdOrError =
-        await DatabaseViewBackendService(viewId: viewId).getDatabaseId();
+    final parentViewId = state.parentView.id;
+    final activeViewId = state.tabBars.isNotEmpty &&
+            state.selectedIndex < state.tabBars.length
+        ? state.tabBars[state.selectedIndex].viewId
+        : parentViewId;
+    var databaseIdOrError =
+        await DatabaseViewBackendService(viewId: activeViewId).getDatabaseId();
+    if (databaseIdOrError.isFailure && activeViewId != parentViewId) {
+      databaseIdOrError =
+          await DatabaseViewBackendService(viewId: parentViewId).getDatabaseId();
+    }
     databaseIdOrError.fold(
       (databaseId) async {
         final linkedViewOrError =
             await ViewBackendService.createDatabaseLinkedView(
-          parentViewId: viewId,
+          parentViewId: parentViewId,
           databaseId: databaseId,
           layoutType: layoutType,
           name: name,

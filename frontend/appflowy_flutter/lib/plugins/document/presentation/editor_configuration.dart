@@ -405,7 +405,16 @@ Map<String, BlockComponentBuilder> _buildBlockComponentBuilderMap(
       context,
       configuration,
     ),
+    'pdf': _buildFileBlockComponentBuilder(
+      context,
+      configuration,
+    ),
     SubPageBlockKeys.type: _buildSubPageBlockComponentBuilder(
+      context,
+      configuration,
+      styleCustomizer: styleCustomizer,
+    ),
+    'linked_page': _buildSubPageBlockComponentBuilder(
       context,
       configuration,
       styleCustomizer: styleCustomizer,

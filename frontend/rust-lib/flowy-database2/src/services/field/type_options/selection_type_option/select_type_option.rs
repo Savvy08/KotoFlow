@@ -270,11 +270,22 @@ impl From<SelectOptionCellData> for SelectOptionCellDataPB {
 pub fn make_selected_options(ids: SelectOptionIds, options: &[SelectOption]) -> Vec<SelectOption> {
   ids
     .iter()
-    .flat_map(|option_id| {
-      options
+    .filter_map(|option_id| {
+      if option_id.trim().is_empty() {
+        return None;
+      }
+      if let Some(opt) = options
         .iter()
-        .find(|option| &option.id == option_id)
-        .cloned()
+        .find(|option| &option.id == option_id || &option.name == option_id)
+      {
+        Some(opt.clone())
+      } else {
+        Some(SelectOption::with_color(
+          option_id.as_str(),
+          collab_database::fields::select_type_option::SelectOptionColor::Purple,
+        ))
+      }
     })
     .collect()
 }
+
