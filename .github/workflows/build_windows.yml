@@ -53,17 +53,27 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path dist
-          $exe = Get-ChildItem -Path frontend -Recurse -Filter "AppFlowy.exe" | Select-Object -First 1
+          Write-Host "Searching for compiled Windows binary..."
+          $exe = Get-ChildItem -Path . -Recurse -File | Where-Object { $_.Extension -eq ".exe" -and ($_.Name -like "*flowy*" -or $_.Name -like "*koto*") } | Select-Object -First 1
+          if (-not $exe) {
+            $exe = Get-ChildItem -Path . -Recurse -File | Where-Object { $_.Extension -eq ".exe" } | Select-Object -First 1
+          }
           if ($exe) {
             $releaseDir = $exe.DirectoryName
-            Write-Host "Found AppFlowy executable in: $releaseDir"
+            Write-Host "Found executable at: $releaseDir"
             Get-ChildItem -Path $releaseDir
             Compress-Archive -Path "$releaseDir\*" -DestinationPath "dist\KotoFlow-Windows-x64.zip" -Force
             $zipItem = Get-Item "dist\KotoFlow-Windows-x64.zip"
             Write-Host "Created zip archive of size: $($zipItem.Length) bytes"
           } else {
-            Write-Error "AppFlowy.exe not found in frontend directory!"
-            exit 1
+            $relDir = Get-ChildItem -Path . -Recurse -Directory | Where-Object { $_.Name -eq "Release" } | Select-Object -First 1
+            if ($relDir) {
+              Write-Host "Found Release directory at: $($relDir.FullName)"
+              Compress-Archive -Path "$($relDir.FullName)\*" -DestinationPath "dist\KotoFlow-Windows-x64.zip" -Force
+            } else {
+              Write-Error "Could not find build output directory!"
+              exit 1
+            }
           }
 
       - name: Upload Build Artifact
