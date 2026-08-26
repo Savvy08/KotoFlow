@@ -52,28 +52,48 @@ jobs:
       - name: Archive Windows Release
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path dist
-          Write-Host "Searching for compiled Windows binary..."
-          $exe = Get-ChildItem -Path . -Recurse -File | Where-Object { $_.Extension -eq ".exe" -and ($_.Name -like "*flowy*" -or $_.Name -like "*koto*") } | Select-Object -First 1
-          if (-not $exe) {
-            $exe = Get-ChildItem -Path . -Recurse -File | Where-Object { $_.Extension -eq ".exe" } | Select-Object -First 1
+          $ErrorActionPreference = "Stop"
+          $sourceDir = "frontend\appflowy_flutter\build\windows\x64\runner\Release"
+
+          if (-not (Test-Path $sourceDir)) {
+            Write-Error "Не найден каталог сборки: $sourceDir"
+            exit 1
           }
-          if ($exe) {
-            $releaseDir = $exe.DirectoryName
-            Write-Host "Found executable at: $releaseDir"
-            Get-ChildItem -Path $releaseDir
-            Compress-Archive -Path "$releaseDir\*" -DestinationPath "dist\KotoFlow-Windows-x64.zip" -Force
-            $zipItem = Get-Item "dist\KotoFlow-Windows-x64.zip"
-            Write-Host "Created zip archive of size: $($zipItem.Length) bytes"
-          } else {
-            $relDir = Get-ChildItem -Path . -Recurse -Directory | Where-Object { $_.Name -eq "Release" } | Select-Object -First 1
-            if ($relDir) {
-              Write-Host "Found Release directory at: $($relDir.FullName)"
-              Compress-Archive -Path "$($relDir.FullName)\*" -DestinationPath "dist\KotoFlow-Windows-x64.zip" -Force
-            } else {
-              Write-Error "Could not find build output directory!"
-              exit 1
-            }
+
+          $exePath  = Join-Path $sourceDir "AppFlowy.exe"
+          $dataPath = Join-Path $sourceDir "data"
+          $dllCount = (Get-ChildItem -Path $sourceDir -Filter "*.dll" -File).Count
+
+          if (-not (Test-Path $exePath))  { Write-Error "AppFlowy.exe не найден в $sourceDir"; exit 1 }
+          if (-not (Test-Path $dataPath)) { Write-Error "Папка data/ не найдена в $sourceDir — сборка неполная"; exit 1 }
+          if ($dllCount -eq 0)            { Write-Error "В $sourceDir нет .dll файлов — сборка неполная"; exit 1 }
+
+          Write-Host "DLL найдено: $dllCount"
+          $dataStats = Get-ChildItem -Path $dataPath -Recurse -File | Measure-Object -Property Length -Sum
+          Write-Host "data/: файлов $($dataStats.Count), $([math]::Round($dataStats.Sum / 1MB, 2)) MB"
+
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+
+          $stageDir = "dist\AppFlowy"
+          if (Test-Path $stageDir) { Remove-Item $stageDir -Recurse -Force }
+          robocopy $sourceDir $stageDir /E /NFL /NDL /NJH /NJS /NC /NS
+          if ($LASTEXITCODE -ge 8) {
+            Write-Error "robocopy завершился с ошибкой (код $LASTEXITCODE)"
+            exit 1
+          }
+
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $zipPath = "$PWD\dist\KotoFlow-Windows-x64.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          [System.IO.Compression.ZipFile]::CreateFromDirectory($stageDir, $zipPath, [System.IO.Compression.CompressionLevel]::Optimal, $false)
+
+          $zipItem = Get-Item $zipPath
+          $sizeMB = [math]::Round($zipItem.Length / 1MB, 2)
+          Write-Host "Архив создан: $zipPath ($sizeMB MB)"
+
+          if ($sizeMB -lt 20) {
+            Write-Error "Архив подозрительно маленький ($sizeMB MB) — часть файлов не попала внутрь"
+            exit 1
           }
 
       - name: Upload Build Artifact
