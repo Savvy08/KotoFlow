@@ -53,34 +53,47 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = "Stop"
-          $sourceDir = "frontend\appflowy_flutter\build\windows\x64\runner\Release"
 
-          if (-not (Test-Path $sourceDir)) {
-            Write-Error "Не найден каталог сборки: $sourceDir"
+          $buildRoot = "frontend\appflowy_flutter\build\windows"
+
+          if (-not (Test-Path $buildRoot)) {
+            Write-Error "Каталог $buildRoot вообще не существует — flutter build windows ничего сюда не положил."
             exit 1
           }
 
-          $exePath  = Join-Path $sourceDir "AppFlowy.exe"
-          $dataPath = Join-Path $sourceDir "data"
-          $dllCount = (Get-ChildItem -Path $sourceDir -Filter "*.dll" -File).Count
+          Write-Host "=== Реальная структура $buildRoot ==="
+          Get-ChildItem -Path $buildRoot -Recurse -Directory | Select-Object FullName
 
-          if (-not (Test-Path $exePath))  { Write-Error "AppFlowy.exe не найден в $sourceDir"; exit 1 }
-          if (-not (Test-Path $dataPath)) { Write-Error "Папка data/ не найдена в $sourceDir — сборка неполная"; exit 1 }
-          if ($dllCount -eq 0)            { Write-Error "В $sourceDir нет .dll файлов — сборка неполная"; exit 1 }
+          Write-Host "=== Все AppFlowy.exe внутри build/windows ==="
+          $candidates = Get-ChildItem -Path $buildRoot -Recurse -File -Filter "AppFlowy.exe"
+          $candidates | Select-Object FullName, Length
 
-          Write-Host "DLL найдено: $dllCount"
-          $dataStats = Get-ChildItem -Path $dataPath -Recurse -File | Measure-Object -Property Length -Sum
-          Write-Host "data/: файлов $($dataStats.Count), $([math]::Round($dataStats.Sum / 1MB, 2)) MB"
+          if ($candidates.Count -eq 0) {
+            Write-Error "AppFlowy.exe нигде не найден внутри $buildRoot."
+            exit 1
+          }
+
+          $sourceDir = $null
+          foreach ($c in $candidates) {
+            $dir = $c.DirectoryName
+            $hasData = Test-Path (Join-Path $dir "data")
+            $dllCount = (Get-ChildItem -Path $dir -Filter "*.dll" -File -ErrorAction SilentlyContinue).Count
+            Write-Host "Кандидат: $dir | data/: $hasData | dll: $dllCount"
+            if ($hasData -and $dllCount -gt 0) { $sourceDir = $dir }
+          }
+
+          if (-not $sourceDir) {
+            Write-Error "Ни один AppFlowy.exe не лежит рядом с data/ и .dll — полного бандла нет нигде в build/windows."
+            exit 1
+          }
+
+          Write-Host "Используем как источник: $sourceDir"
 
           New-Item -ItemType Directory -Force -Path dist | Out-Null
-
           $stageDir = "dist\AppFlowy"
           if (Test-Path $stageDir) { Remove-Item $stageDir -Recurse -Force }
           robocopy $sourceDir $stageDir /E /NFL /NDL /NJH /NJS /NC /NS
-          if ($LASTEXITCODE -ge 8) {
-            Write-Error "robocopy завершился с ошибкой (код $LASTEXITCODE)"
-            exit 1
-          }
+          if ($LASTEXITCODE -ge 8) { Write-Error "robocopy завершился с ошибкой ($LASTEXITCODE)"; exit 1 }
 
           Add-Type -AssemblyName System.IO.Compression.FileSystem
           $zipPath = "$PWD\dist\KotoFlow-Windows-x64.zip"
@@ -90,11 +103,7 @@ jobs:
           $zipItem = Get-Item $zipPath
           $sizeMB = [math]::Round($zipItem.Length / 1MB, 2)
           Write-Host "Архив создан: $zipPath ($sizeMB MB)"
-
-          if ($sizeMB -lt 20) {
-            Write-Error "Архив подозрительно маленький ($sizeMB MB) — часть файлов не попала внутрь"
-            exit 1
-          }
+          if ($sizeMB -lt 20) { Write-Error "Архив подозрительно маленький ($sizeMB MB)"; exit 1 }
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
