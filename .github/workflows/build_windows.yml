@@ -62,17 +62,17 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
 
-          $buildRoot = "frontend\appflowy_flutter\build\windows"
+          $buildRoot = "frontend\appflowy_flutter"
 
           if (-not (Test-Path $buildRoot)) {
-            Write-Error "Каталог $buildRoot вообще не существует — flutter build windows ничего сюда не положил."
+            Write-Error "Каталог $buildRoot не существует."
             exit 1
           }
 
           Write-Host "=== Реальная структура $buildRoot ==="
-          Get-ChildItem -Path $buildRoot -Recurse -Directory | Select-Object FullName
+          Get-ChildItem -Path $buildRoot -Recurse -Directory -ErrorAction SilentlyContinue | Select-Object FullName
 
-          Write-Host "=== Все AppFlowy.exe внутри build/windows ==="
+          Write-Host "=== Все AppFlowy.exe внутри appflowy_flutter ==="
           $candidates = Get-ChildItem -Path $buildRoot -Recurse -File -Filter "AppFlowy.exe"
           $candidates | Select-Object FullName, Length
 
