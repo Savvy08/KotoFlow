@@ -43,6 +43,14 @@ jobs:
           echo "$LOCALAPPDATA/Pub/Cache/bin" >> $GITHUB_PATH
           echo "$USERPROFILE/.cargo/bin" >> $GITHUB_PATH
 
+      - name: Ensure MSVC + Desktop C++ workload
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Verify Visual Studio detection
+        shell: bash
+        run: |
+          flutter doctor -v
+
       - name: Build KotoFlow for Windows
         shell: bash
         working-directory: frontend
